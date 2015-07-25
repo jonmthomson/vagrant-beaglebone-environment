@@ -32,12 +32,12 @@ Vagrant.configure(2) do |config|
     # vb.customize ["modifyvm", :id, "--audio", "dsound", "--audiocontroller", "hda"] # choices: hda sb16 ac97
   end
 
-   # Configure the guest's proxy environment variables to point to CNTLM on the host
-  if Vagrant.has_plugin?("vagrant-proxyconf")
-    config.proxy.http     = "http://10.0.2.2:3128"
-    config.proxy.https    = "https://10.0.2.2:3128"
-    config.proxy.no_proxy = "localhost,127.0.0.1"
-  end
+  # Configure the guest's proxy environment variables to point to CNTLM on the host
+  # if Vagrant.has_plugin?("vagrant-proxyconf") 
+  #   config.proxy.http     = "http://10.0.2.2:3128"
+  #   config.proxy.https    = "https://10.0.2.2:3128"
+  #   config.proxy.no_proxy = "localhost,127.0.0.1"
+  # end
 
   # Install VirtualBox guest additions 
   if Vagrant.has_plugin?("vagrant-vbguest")
