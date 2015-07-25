@@ -3,7 +3,8 @@
 REQUIRED_PLUGINS = [
   "vagrant-proxyconf",
   "vagrant-vbguest",
-  "vagrant-triggers"]
+  "vagrant-triggers",
+  "vagrant-omnibus"]
 
 REQUIRED_PLUGINS.each do |plugin|
   unless Vagrant.has_plugin?(plugin)
@@ -28,7 +29,7 @@ Vagrant.configure(2) do |config|
     vb.customize ["setextradata", :id, "GUI/MaxGuestResolution", "any"]
     vb.customize ["setextradata", :id, "CustomVideoMode1", "1920x1080x32"]
     # Specific to a Windows host
-    vb.customize ["modifyvm", :id, "--audio", "dsound", "--audiocontroller", "hda"] # choices: hda sb16 ac97
+    # vb.customize ["modifyvm", :id, "--audio", "dsound", "--audiocontroller", "hda"] # choices: hda sb16 ac97
   end
 
    # Configure the guest's proxy environment variables to point to CNTLM on the host
@@ -44,6 +45,11 @@ Vagrant.configure(2) do |config|
     config.vbguest.no_remote = true
   end
 
+  if Vagrant.has_plugin?("vagrant-omnibus")
+  	# config.omnibus.chef_version = :latest
+  	config.omnibus.chef_version = "12.3.0"
+  end
+
   # Refer to bug #5199. Clearing sync folders help chef shared folders work better.
   if Vagrant.has_plugin?("vagrant-triggers")
     config.trigger.before [:up, :reload], stdout: true do 
@@ -53,7 +59,6 @@ Vagrant.configure(2) do |config|
       `rm .vagrant/machines/default/virtualbox/synced_folders`
     end
   end
-
   #---------------------------------
   # Provision customised box
   #---------------------------------
@@ -94,7 +99,7 @@ Vagrant.configure(2) do |config|
   end
   config.vm.provision "shell", inline: $install_gui
   config.vm.provision "shell", inline: $install_armhf_build_tools
-  config.vm.provision "shell", inline: $install_build_essentials
+  # config.vm.provision "shell", inline: $install_build_essentials
   config.vm.provision "shell", inline: $add_eclipse_to_launcher
 end
 
